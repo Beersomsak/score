@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<title>ระบบตรวจสอบคะแนนและส่งงาน</title>
+<style>
+  body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:linear-gradient(160deg,#c7d2fe,#e0e7ff 45%,#dbeafe);min-height:100vh;display:flex;align-items:center;justify-content:center}
+  #ld{background:#fff;border-radius:20px;padding:28px 24px;max-width:360px;width:86%;text-align:center;box-shadow:0 20px 50px rgba(49,46,129,.15);color:#334155}
+  #ld .ic{font-size:40px} #ld button{margin-top:14px;padding:12px 20px;border:0;border-radius:12px;background:#4f46e5;color:#fff;font-size:16px}
+</style>
+</head>
+<body>
+<div id="ld"><div class="ic">🎓</div><h3 style="margin:8px 0;color:#3730a3">ระบบตรวจสอบคะแนนและส่งงาน</h3><div id="msg">⏳ กำลังโหลด...</div></div>
+<script>
+/* ===== ตั้งค่า: ลิงก์ Web app ของ Apps Script (ลงท้าย /exec) ===== */
+window.API_URL = 'https://script.google.com/macros/s/AKfycbwpWo39dalXe-qpvWUR8i8O4jYiCSeh3QsaY-9xevyxJeNUJrGnDzowSGmlEzUpXiPFZQ/exec';
+/* หน้านี้อัปโหลดครั้งเดียว — แก้โค้ดใน Apps Script แล้ว Deploy New version หน้านี้จะได้ของใหม่เอง */
+(function load(tryNo){
+  fetch(window.API_URL + '?raw=1&t=' + Date.now(), { credentials: 'omit', redirect: 'follow', cache: 'no-store' })
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function(html){
+      if (html.indexOf('id="studentView"') < 0) throw new Error('ไม่ใช่หน้าระบบ — ตรวจ API_URL และ Deploy แบบ Anyone');
+      html = html.replace(/<base[^>]*>/i, '').replace(/<head>/i, '<head><script>window.API_URL=' + JSON.stringify(window.API_URL) + ';<\/script>');
+      document.open(); document.write(html); document.close();
+    })
+    .catch(function(e){
+      if (tryNo < 2) return setTimeout(function(){ load(tryNo + 1); }, 1500);
+      document.getElementById('msg').innerHTML = '❌ โหลดไม่สำเร็จ (' + e.message + ')<br><button onclick="location.reload()">ลองใหม่</button>';
+    });
+})(0);
+</script>
+</body>
+</html>
